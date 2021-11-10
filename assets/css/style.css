@@ -1,0 +1,16 @@
+*{
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-decoration: none !important;
+}
+.headernocenter{
+  align-items: flex-start!important;
+}
+.text-justify{
+  text-align: justify;
+}
+.indentabout{
+  text-indent: 3rem;
+}
