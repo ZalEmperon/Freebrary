@@ -5,6 +5,8 @@ session_start();
 <!DOCTYPE html>
 <html lang="en">
 
+<!--CSS & FONT-->
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,9 +21,9 @@ session_start();
   <title>Freebrary</title>
 </head>
 
-<body>
+<body id="beranda">
 
-  <!--H E A D E R / N A V B A R-->
+  <!--HEADER / NAVBAR-->
   <nav class="navbar navbar-expand-lg navbar-light bg-primary bg-gradient shadow sticky-top">
     <div class="container">
       <a class="navbar-brand" href="index.php"><img src="assets/img/Freebraryflat.svg" height="50" width="50"><span class="fw-bold h2 align-middle text-white"> Freebrary</span></a>
@@ -31,7 +33,7 @@ session_start();
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active text-white" aria-current="page" href="index.php">Beranda</a>
+            <a class="nav-link active text-white" aria-current="page" href="#beranda">Beranda</a>
           </li>
           <li class="nav-item">
             <a class="nav-link text-white" href="#buku">Buku</a>
@@ -40,9 +42,9 @@ session_start();
             <a class="nav-link text-white" data-bs-toggle="modal" data-bs-target="#modalAbout">Tentang Kami</a>
           </li>
 
-          <!--L O G I N / R E G I S T E R / P R O F I L-->
+          <!--LOGIN / REGISTER / PROFIL-->
           <li class="nav-item dropdown">
-            <!--S U D A H L O G I N-->
+            <!--SUDAH LOGIN-->
             <?php if (isset($_SESSION['username'])) { ?>
               <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <?php echo $_SESSION['username']; ?> - <?php echo $_SESSION['status']; ?>
@@ -50,7 +52,7 @@ session_start();
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" id="logout" name="logout">Logout</a></li>
               </ul>
-              <!--B E L U M L O G I N-->
+              <!--BELUM LOGIN-->
             <?php } else { ?>
               <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Masuk
@@ -66,7 +68,7 @@ session_start();
     </div>
   </nav>
 
-  <!--I  S I-->
+  <!--ISI-->
   <div class="p-2 mb-4 rounded-3">
     <div class="container py-5">
       <div class="row">
@@ -80,28 +82,24 @@ session_start();
       </div>
     </div>
   </div>
+
+  <!--BUKU & SEARCH-->
   <div class="container">
     <h1 class="fw-bold text-center display-5" id="buku">Buku-Buku</h1>
-    <form class="d-flex mb-4" action="" method="GET">
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="buku">
-      <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button>
+    <form class="d-flex mb-4" action="" method="POST">
+      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search">
     </form>
     <?php
-    if (!isset($_SESSION['status'])) { ?>
+    if (!isset($_SESSION['status']) || ($_SESSION['status'] != "Admin")) { ?>
       <br>
-    <?php } elseif ($_SESSION['status'] != "User") { ?>
-      <Button class="btn btn-warning mb-3">Tambah Buku</Button>
+    <?php } else { ?>
+      <Button class="btn btn-warning mb-3" data-bs-toggle="modal" data-bs-target="#modalTambah">Tambah Buku</Button><br><br>
     <?php } ?>
-    <div class="row justify-content-evenly">
+    <div class="row mx-auto" id="tampil">
       <?php
-      if (isset($_GET['buku'])) {
-        $buku = $_GET['buku'];
-        $hasil = mysqli_query($conn, "SELECT * FROM buku WHERE judul LIKE '%{$buku}%'");
-      } else {
-        $hasil = mysqli_query($conn, "SELECT * FROM buku ORDER BY id_buku ASC");
-      }
+      $hasil = mysqli_query($conn, "SELECT * FROM buku ORDER BY id_buku ASC");
       while ($value = mysqli_fetch_assoc($hasil)) : ?>
-        <div class="col-sm-2 m-2 p-3 bg-info rounded col-5">
+        <div class="col-md-3 m-2 bg-info rounded col-5 shadow details" data-id="<?php echo $value['id_buku']; ?>" data-bs-toggle="modal" data-bs-target="#modaltail">
           <p><?php echo $value['judul'] ?></p>
           <p><?php echo $value['pengarang'] ?></p>
           <p><?php echo $value['penerbit'] ?></p>
@@ -110,7 +108,7 @@ session_start();
     </div>
   </div>
 
-  <!--F O O T E R-->
+  <!--FOOTER-->
   <div class="bg-primary bg-gradient">
     <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 mt-4 border-top container">
       <p class="col-md-4 mb-0 fw-bolder">© 2021 Freebrary ID</p>
@@ -126,9 +124,10 @@ session_start();
     </footer>
   </div>
 
-  <div class=" I S I M O D A L ">
-    <!--M O D A L T E N T A N G-->
-    <div class="modal fade" id="modalAbout" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <!--ISI MODAL-->
+  <div>
+    <!--MODAL TENTANG-->
+    <div class="modal fade" id="modalAbout" data-bs-keyboard="false" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-body text-center headernocenter">
@@ -140,8 +139,9 @@ session_start();
         </div>
       </div>
     </div>
-    <!--M O D A L L O G I N-->
-    <div class="modal fade" id="modalLogin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <!--MODAL LOGIN-->
+    <div class="modal fade" id="modalLogin" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header headernocenter" style="background-image: url(assets/img/login_image.jpg);height:200px;width:100.1%;background-repeat: no-repeat;">
@@ -151,10 +151,10 @@ session_start();
             <h5 class="text-center fw-bold">LOGIN</h5>
 
             <!--F O R M L O G I N-->
-            <form action="index.php" method="POST">
+            <form id="formlogin">
               <div class="mb-2">
-                <label for="exampleInputEmail1" class="form-label">Username</label>
-                <input type="text" class="form-control form-control-sm" id="username" name="username" placeholder="bambangjuan">
+                <label for="exampleInputEmail1" class="form-label">Email</label>
+                <input type="email" class="form-control form-control-sm" id="email" name="email" placeholder="bambangjuan">
               </div>
               <div class="mb-2">
                 <label for="exampleInputPassword1" class="form-label">Password</label>
@@ -168,8 +168,8 @@ session_start();
       </div>
     </div>
 
-    <!--M O D A L R E G I S T E R-->
-    <div class="modal fade" id="modalRegister" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!--MODAL REGISTER-->
+    <div class="modal fade" id="modalRegister" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header headernocenter" style="background-image: url(assets/img/register_image.jpg);height:200px;width:100.1%;">
@@ -179,6 +179,68 @@ session_start();
             <h5 class="text-center fw-bold">REGISTER</h5>
 
             <!--F O R M R E G I S T E R-->
+            <form action="" method="POST" id="formRegister">
+              <div class="mb-2">
+                <label for="exampleInputEmail1" class="form-label">Username</label>
+                <input type="text" class="form-control form-control-sm" id="usernameregister" name="usernameregister" placeholder="Masukan Username">
+              </div>
+              <div class="mb-2">
+                <label for="exampleInputEmail1" class="form-label">Email address</label>
+                <input type="email" class="form-control form-control-sm" id="emailregister" name="emailregister" placeholder="Masukan Alamat Email">
+              </div>
+              <div class="mb-2">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
+                <input type="password" class="form-control form-control-sm" id="passwordregister" name="passwordregister" placeholder="Masukan Password">
+              </div>
+              <button type="submit" class="btn btn-success my-2" data-bs-dismiss="modal" id="register">Buat Sekarang!</button><br>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--MODAL TAMBAH-->
+    <div class="modal fade" id="modalTambah" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body container">
+            <button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-label="Close"></button><br><br>
+            <h5 class="text-center fw-bold">Tambah Data Buku</h5>
+
+            <!--F O R M T A M B A H-->
+            <form action="" method="POST" id="formTambah">
+              <div class="mb-2">
+                <label class="form-label">Judul Buku</label>
+                <input type="text" class="form-control form-control-sm" id="juduladd" name="juduladd" placeholder="Masukan Judul Buku">
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Pengarang</label>
+                <input type="text" class="form-control form-control-sm" id="pengarangadd" name="pengarangadd" placeholder="Masukan Pengarang">
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Penerbit</label>
+                <input type="text" class="form-control form-control-sm" id="penerbitadd" name="penerbitadd" placeholder="Masukan Penerbit">
+              </div>
+              <button type="submit" class="btn btn-success my-2" data-bs-dismiss="modal" id="tambah">Tambah</button><br>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--MODAL EDIT-->
+    <div class="modal fade" id="modalEdit" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header headernocenter" style="background-image: url(assets/img/register_image.jpg);height:200px;width:100.1%;">
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body container">
+            <h5 class="text-center fw-bold">REGISTER</h5>
+
+            <!--FORM EDIT-->
             <form action="" method="POST">
               <div class="mb-2">
                 <label for="exampleInputEmail1" class="form-label">Username</label>
@@ -199,58 +261,172 @@ session_start();
         </div>
       </div>
     </div>
+
+    <!--MODAL DETAIL-->
+    <div class="modal fade" id="modalDetail" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content" id="data-buku">
+
+        </div>
+      </div>
+    </div>
   </div>
-  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="assets/js/bootstrap.js"></script>
-  <script src="assets/js/jquery.js"></script>
-  <script>
-    $(document).ready(function() {
-      $('#tblLogin').click(function() {
-        var username = $('#username').val();
-        var password = $('#password').val();
-        if (username != '' && password != '') {
+
+    <!--SCRIPT & AJAX-->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="assets/js/bootstrap.js"></script>
+    <script src="assets/js/jquery.js"></script>
+    <script>
+      $(document).ready(function() {
+
+        // LOGIN
+        $('#tblLogin').click(function() {
+          var email = $('#email').val();
+          var password = $('#password').val();
+          if (email != '' && password != '') {
+            $.ajax({
+              url: "login.php",
+              method: "POST",
+              data: {
+                email: email,
+                password: password
+              },
+              success: function(datalogin) {
+                if (datalogin == 'No') {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Email Atau Password Salah'
+                  })
+                  $('#formlogin').trigger("reset");
+                } else {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Login',
+                    showCancelButton: false,
+                    showConfirmButton: false
+                  })
+                  setTimeout(function() {
+                    location.reload();
+                  }, 1500);
+                }
+              }
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Isi Password dan Email!'
+            })
+          }
+        });
+
+        // LOGOUT
+        $('#logout').click(function() {
+          var action = "logout";
           $.ajax({
             url: "login.php",
             method: "POST",
             data: {
-              username: username,
-              password: password
+              action: action
             },
-            success: function(data) {
-              if (data.success == 'No') {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'Email Atau Password Salah'
-                })
-              } else {
-                location.reload();
-              }
+            success: function() {
+              location.reload();
             }
           });
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Isi Password dan Email!'
-          })
-        }
-      });
-      $('#logout').click(function() {
-        var action = "logout";
-        $.ajax({
-          url: "login.php",
-          method: "POST",
-          data: {
-            action: action
-          },
-          success: function() {
-            location.reload();
+        });
+
+        // DETAIL
+        $('.details').click(function() {
+          var id_buku = $(this).data("id")
+          $.ajax({
+            url: "detail.php",
+            method: "POST",
+            data: {
+              id_buku: id_buku
+            },
+            success: function(data) {
+              $("#data-buku").html(data)
+              $("#modalDetail").modal('show')
+            }
+          });
+        });
+
+        // SEARCH
+        $('#search').on('keyup', function() {
+          $.ajax({
+            type: 'POST',
+            url: 'search.php',
+            data: {
+              search: $('#search').val()
+            },
+            success: function(data) {
+              $('#tampil').html(data)
+            }
+          });
+        });
+
+        //TAMBAH DATA
+        $('#formTambah').on("submit", function(event) {
+          event.preventDefault();
+          if ($('#juduladd').val() == "" || $('#penerbitadd').val() == "" || $('#pengarangadd').val() == "") {
+            Swal.fire({
+              icon: 'error',
+              text: 'Lengkapi Semua Data!'
+            });
+          } else {
+            $.ajax({
+              url: "tambah.php",
+              method: "POST",
+              data: $('#formTambah').serialize(),
+              beforeSend: function() {
+                $('#tambah').val("Inserting");
+              },
+              success: function() {
+                $('#formTambah')[0].reset();
+                $('#modalTambah').modal('hide');
+                location.reload();
+              }
+            });
           }
         });
+
+        //REGISTER
+        $('#formRegister').on("submit", function(event) {
+          event.preventDefault();
+          if ($('#usernameregister').val() == "" || $('#emailregister').val() == "" || $('#passwordregister').val() == "") {
+            Swal.fire({
+              icon: 'error',
+              text: 'Lengkapi Semua Data!'
+            });
+          } else {
+            $.ajax({
+              url: "register.php",
+              method: "POST",
+              data: $('#formRegister').serialize(),
+              beforeSend: function() {
+                $('#register').val("Inserting");
+              },
+              success: function() {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Akun Berhasil dibuat, Silahkan Login',
+                  showCancelButton: false,
+                  showConfirmButton: false
+                })
+                setTimeout(function() {
+                  $('#formRegister')[0].reset();
+                  $('#modalRegister').modal('hide');
+                  location.reload();
+                }, 2000);
+              }
+            });
+          }
+        });
+
+        
       });
-    });
-  </script>
+    </script>
 </body>
 
 </html>
