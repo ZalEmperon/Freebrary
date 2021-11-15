@@ -1,5 +1,5 @@
 <?php
-  include "conn.php" ;
+include "conn.php" ;
 if (isset($_POST['id'])){
   $id = $_POST['id'];
   $judul = $_POST['juduledit'];

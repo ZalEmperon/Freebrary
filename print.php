@@ -16,26 +16,22 @@ session_start();
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
   <link rel="icon" href="assets/img/Freebraryflat.svg">
-  <title>Print</title>
+  <title>Freebrary</title>
 </head>
 
-<body>
+<body class="bodyprint rounded bg-primary">
   <?php
   $id = ($_GET["id_buku"]);
   $hasil = mysqli_query($conn, "SELECT * FROM buku WHERE id_buku='$id'");
   while ($row = mysqli_fetch_array($hasil)) {
   ?>
-    <div class="container my-5">
-      <div class="card">
-        <div class="card-header text-muted"></div>
-        <div class="card-body text-center">
-          <h3 class="text-center mt-2"><b><?php echo $row['judul']; ?></b></h3>
-          <img src="gambar/<?php echo $row['gambar'] ?>" class="card-img-top border" alt="gambar" style="height: 20%; width: 20%;">
-          <h5 class="text-center mt-2"><b><?php echo $row['pengarang']; ?></b></h5>
-          <h6 div class="text-center mt-2"><i><?php echo $row['penerbit']; ?></i></h6>
-          <p div class="text-center mt-3"><?php echo $row['sinopsis']; ?></p>
-        </div>
-        <div class="card-footer text-muted"></div>
+    <div class="mx-auto my-5 bg-light rounded shadow" style="width: 90%;">
+      <div class="container">
+        <h1 class="text-center py-2 display-5 fw-bold"><?php echo $row['judul']; ?></h1>
+        <img src="bookimg/<?php echo $row['gambar'] ?>" class="border mx-auto d-block my-3 shadow" alt="gambar" height="400px" width="45%">
+        <h2 class="ms-5 d-block pt-3 fw-bold">Pengarang :<?php echo $row['pengarang']; ?></h2><br>
+        <h2 class="ms-5 d-block">Penerbit : <?php echo $row['penerbit']; ?></h2><br>
+        <h2 class="ms-5 pb-5 d-block">Genre : <?php echo $row['genre']; ?></h2>
       </div>
     </div>
   <?php

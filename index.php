@@ -86,6 +86,7 @@ session_start();
   <!--BUKU & SEARCH-->
   <div class="container">
     <h1 class="fw-bold text-center display-5" id="buku">Buku-Buku</h1>
+    <p class="fw-bold h3">Cari Buku</p>
     <form class="d-flex mb-4" action="" method="POST">
       <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search">
     </form>
@@ -100,7 +101,7 @@ session_start();
       $hasil = mysqli_query($conn, "SELECT * FROM buku ORDER BY id_buku ASC");
       while ($value = mysqli_fetch_assoc($hasil)) : ?>
         <div class="col-md-3 me-2 my-1 bg-light rounded shadow details col-5" data-id="<?php echo $value['id_buku']; ?>" data-bs-toggle="modal" data-bs-target="#modalDetail">
-          <img src="bookimg/<?php echo $value['gambar'] ?>" width="100%" height="250px" class="my-3 rounded shadow d-inline-block mx-auto">
+          <img src="bookimg/<?php echo $value['gambar'] ?>" width="100%" height="300px" class="my-3 rounded shadow d-inline-block mx-auto">
           <h6 class="fw-bold"><?php echo $value['judul'] ?></h6>
           <h6><?php echo $value['pengarang'] ?></h6>
         </div>
@@ -116,10 +117,8 @@ session_start();
         <img src="assets/img/Freebraryflat.svg" height="80" width="80">
       </a>
       <ul class="nav col-md-4 justify-content-end">
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-dark fw-bold">Home</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-dark fw-bold">Features</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-dark fw-bold">Pricing</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-dark fw-bold">About</a></li>
+        <li class="nav-item"><a href="#beranda" class="nav-link px-2 text-dark fw-bold">Home</a></li>
+        <li class="nav-item"><a data-bs-toggle="modal" data-bs-target="#modalAbout" class="nav-link px-2 text-dark fw-bold">About</a></li>
       </ul>
     </footer>
   </div>
@@ -253,7 +252,7 @@ session_start();
 
             <!--FORM EDIT-->
             <form action="" method="POST" id="formEdit" enctype="multipart/form-data">
-              <input name="id" type="hidden" id="id"/>
+              <input name="id" type="hidden" id="id" />
               <div class="mb-2">
                 <label class="form-label">Gambar Buku</label>
                 <input type="file" class="form-control form-control-sm" id="gambaredit" name="gambaredit">
